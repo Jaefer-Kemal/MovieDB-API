@@ -70,13 +70,22 @@ This is the pervious version using function-based views. 1st version'''
     
     
 from rest_framework.views import APIView
+from rest_framework import pagination
 '''This is the new version using class-based views specifically APIView. 2nd version'''
 
 class MovieListAV(APIView):
     def get(self, request):
         try:
-            movie = Movie.objects.all()
-            serializer = MovieSerializer(movie, many=True)
+            movies = Movie.objects.all()
+            # Instantiate a pagination object
+            paginator = pagination.PageNumberPagination()
+            # Get the 'page_size' from query parameters, defaulting to 10 if not provided
+            paginator.page_size = request.GET.get('page_size', 10)
+            # Apply pagination to the queryset
+            movies_paginated = paginator.paginate_queryset(movies, request)
+        
+            # Serialize the paginated data
+            serializer = MovieSerializer(movies_paginated, many=True)
             return Response(serializer.data)
         except Movie.DoesNotExist:
             Response({"Error": "Movie does not exist"}, status=status.HTTP_404_NOT_FOUND)

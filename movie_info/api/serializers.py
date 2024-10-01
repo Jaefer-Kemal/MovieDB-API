@@ -2,9 +2,12 @@ from rest_framework import serializers
 from movie_info.models import Movie
 
 
+def length_check(value):
+    if len(value) < 2 :
+        raise ValueError('The name is too short')
 class MovieSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField()
+    name = serializers.CharField(validators=[length_check])
     description = serializers.CharField()
     active = serializers.BooleanField()
 
