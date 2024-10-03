@@ -1,19 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, Http404
-from movie_info.models import Movie
+from movie_info.models import MovieList
 from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_cookie
 import json
 
 
 def movie_list(request):
-    movies = Movie.objects.all()
+    movies = MovieList.objects.all()
     data = {"movies": list(movies.values())}
     return JsonResponse(data)
 
 
 def movie_details(request, pk):
     try:
-        movie = get_object_or_404(Movie, pk=pk)
+        movie = get_object_or_404(MovieList, pk=pk)
     except Http404:
         return JsonResponse({"detail": "No movie found with this ID"}, status=404)
 
@@ -31,14 +31,14 @@ def movie_create(request):
             return JsonResponse({"detail": "Invalid JSON"}, status=400)
 
         try:
-            # Create the Movie instance
-            movie = Movie.objects.create(**data)
+            # Create the MovieList instance
+            movie = MovieList.objects.create(**data)
         except TypeError:
             return JsonResponse({"detail": "Invalid fields provided"}, status=400)
 
         return JsonResponse(
             movie.serializer(), status=201
-        )  # Assuming the Movie model has a serialize method
+        )  # Assuming the MovieList model has a serialize method
 
     return JsonResponse({"detail": "Invalid request method"}, status=400)
 
@@ -46,7 +46,7 @@ def movie_create(request):
 def movie_update(request, pk):
     if request.method == "PUT":
         # Retrieve the movie instance using the primary key (pk)
-        movie = get_object_or_404(Movie, pk=pk)
+        movie = get_object_or_404(MovieList, pk=pk)
 
         try:
             # Parse the JSON data from the request body
@@ -65,7 +65,7 @@ def movie_update(request, pk):
             movie.save()
         except Exception as e:
             return JsonResponse({"detail": f"Update failed: {str(e)}"}, status=400)
-        movies = Movie.objects.all()
+        movies = MovieList.objects.all()
         # Return the updated serialized movie object as a response
         data = [ movie.serializer() for movie in movies]
         return JsonResponse({"movies":data }, status=200)
@@ -78,9 +78,9 @@ def movie_update(request, pk):
 def movie_delete(request, pk):
     if request.method == "DELETE":
         try:
-            movie = get_object_or_404(Movie, pk=pk)
+            movie = get_object_or_404(MovieList, pk=pk)
             deleted = movie.delete()
         except Exception as e:
             return JsonResponse({"detail": f"Delete failed: {str(e)}"}, status=400)
-        return JsonResponse({"detail": f"Movie with ID {pk} deleted successfully"}, status=200)
+        return JsonResponse({"detail": f"MovieList with ID {pk} deleted successfully"}, status=200)
     return JsonResponse({"detail": "Invalid request method"}, status=400)

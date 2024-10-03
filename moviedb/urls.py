@@ -17,13 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from movie_info.api.views import APIRootView
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path(
-        "experimental_api/movie/", include("movie_info.experimental_urls")
-    ),  # API endpoint for listing all movies
-    path(
-        "api/movie/", include("movie_info.api.urls")
-    ),  
+    path("admin/", admin.site.urls, name="admin"),
+    path("experimental_api/movie/", include("movie_info.experimental_urls")), 
+    path("api/movie/",include("movie_info.api.urls"),),
+    path("api-auth/", include("rest_framework.urls")),
+    path("", APIRootView.as_view(), name="api_root"),
 ]
