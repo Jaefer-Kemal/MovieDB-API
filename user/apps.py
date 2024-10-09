@@ -1,9 +1,10 @@
 from django.apps import AppConfig
 
 
-class MovieInfoConfig(AppConfig):
+class UserConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'movie_info'
+    name = 'user'
+    
     def ready(self):
         # Import signals here to register them
-        import movie_info.signals
+        import user.signals

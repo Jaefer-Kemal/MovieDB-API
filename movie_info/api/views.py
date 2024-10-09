@@ -14,7 +14,7 @@ from rest_framework import status
 
 from rest_framework.exceptions import ValidationError
 
-from movie_info.api.permissions import IsAdminOrReadOnly, ReviewUserOrReadOnly
+from movie_info.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from rest_framework import permissions
 """1. 
 This is the pervious version using function-based views. 1st version"""
@@ -208,6 +208,7 @@ from rest_framework import viewsets
 
 
 class StreamingPlatformVS(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = StreamingPlatform.objects.all()
     serializer_class = StreamingPlatformSerializer
 
@@ -218,7 +219,6 @@ class StreamingPlatformVS(viewsets.ModelViewSet):
 # List and Create Reviews
 class ReviewList(generics.ListAPIView):
     serializer_class = ReviewSerializer
-
     def get_queryset(self):
         pk = self.kwargs.get("pk")
         return Review.objects.filter(movielist=pk)
@@ -228,7 +228,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly]
+    permission_classes = [IsReviewUserOrReadOnly]
 
 
 class ReviewCreate(generics.CreateAPIView):

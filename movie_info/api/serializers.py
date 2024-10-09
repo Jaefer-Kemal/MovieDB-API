@@ -42,7 +42,9 @@ class MovieListSerializer(serializers.ModelSerializer):
             "since_created",
             "platform",
             "stream",
-            "reviews"
+            "reviews",
+            "avg_rating",
+            "number_rating"
         )
 
     def get_stream(self, obj):

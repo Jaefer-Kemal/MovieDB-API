@@ -25,4 +25,5 @@ urlpatterns = [
     path("api/movie/",include("movie_info.api.urls"),),
     path("api-auth/", include("rest_framework.urls")),
     path("", APIRootView.as_view(), name="api_root"),
+    path("account/", include("user.api.urls")),
 ]

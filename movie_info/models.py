@@ -17,7 +17,8 @@ class MovieList(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     platform = models.ForeignKey(StreamingPlatform, on_delete=models.CASCADE, related_name="movielist")
-    
+    avg_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    number_rating = models.IntegerField(default=0)
     
     def __str__(self):
         return self.title
